@@ -7,7 +7,7 @@
 # <https://github.com/KFERMercer/OpenWrt-CI>
 #
 
-name: Beyond的OpenWrt
+name: Wajbeyond的Newifi3
 
 on:
   push:
@@ -96,7 +96,7 @@ jobs:
           # 无论你想要对固件进行怎样的定制, 都需要且只需要修改 EOF 回环内的内容.
           # 
 
-          # 编译x64固件:
+          # 编译Newifi3固件:
             cat >> .config <<EOF
             CONFIG_TARGET_ramips=y
             CONFIG_TARGET_ramips_mt7621=y
@@ -162,22 +162,10 @@ jobs:
           CONFIG_PACKAGE_luci-app-wireguard=y
           CONFIG_PACKAGE_luci-app-wrtbwmon=y
           CONFIG_PACKAGE_luci-app-syncdial=y
-          CONFIG_PACKAGE_luci-app-zerotier=y
-          CONFIG_PACKAGE_luci-app-xlnetacc=y
-          CONFIG_PACKAGE_luci-app-upnp=y
           CONFIG_PACKAGE_luci-app-mwan3=y
           CONFIG_PACKAGE_luci-app-mwan=y
-          CONFIG_PACKAGE_luci-app-firewall=y
-          CONFIG_PACKAGE_luci-app-cjdns=y
-          CONFIG_PACKAGE_luci-app-aria2=y
-          CONFIG_PACKAGE_luci-app-aliddns=y
-          CONFIG_PACKAGE_luci-app-arpbind=y
-          CONFIG_PACKAGE_luci-app-guest-wifi=y
-          CONFIG_PACKAGE_luci-app-pppoe-relay=y
-          CONFIG_PACKAGE_luci-app-sfe=y
-          CONFIG_PACKAGE_luci-app-s-s-libes=y
-          CONFIG_PACKAGE_luci-app-nlbwmon=y
-          EOF
+          
+          # EOF
 
           # LuCI主题:
           cat >> .config <<EOF
@@ -186,7 +174,7 @@ jobs:
           EOF
 
           # 常用软件包:
-          # cat >> .config <<EOF
+          cat >> .config <<EOF
           CONFIG_PACKAGE_curl=y
           CONFIG_PACKAGE_htop=y
           CONFIG_PACKAGE_nano=y
@@ -229,19 +217,9 @@ jobs:
 
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
-        
-      - name: Assemble artifact
-        run: |
-          rm -rf ./artifact/
-          mkdir -p ./artifact/
-          find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*sysupgrade*bin*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*Newifi3*" | xargs -i mv -f {} ./artifact/
-          mv .config ./artifact/
-          
+
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
           name: OpenWrt firmware
-          path: ./artifact/
+          path: ./bin/targets/
